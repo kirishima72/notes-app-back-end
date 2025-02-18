@@ -44,6 +44,28 @@ export const getAllNotesHandler = () => ({
     },
 });
 
+export const getNotesByIdHandler = (request, h) => {
+    const { id } = request.params;
+
+    const note = notes.filter((n) => n.id === id)[0];
+
+    if (note !== undefined) {
+        return {
+            status: 'success',
+            data: {
+                note,
+            },
+        };
+    }
+
+    const response = h.response({
+        status: 'fail',
+        message: 'Catatan tidak ditemukan',
+    });
+    response.code(404);
+    return response;
+};
+
 export const editNoteByIdHandler = (request, h) => {
     const { id } = request.params;
     const { title, tags, body } = request.payload;
@@ -92,7 +114,7 @@ export const deleteNoteByIdHandler = (request, h) => {
         return response;
     }
 
-    
+
     const response = h.response({
         status: 'fail',
         message: 'Catatan gagal dihapus. Id tidak ditemukan',
